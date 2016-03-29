@@ -17,6 +17,7 @@ public class Player : MonoBehaviour {
 	Timer harpoonReloadTimer;
 	Timer slowBleedTimer;
 	Timer textFlashRedTimer;
+	bool over = false;
 
 	// Use this for initialization
 	void Awake () {
@@ -90,8 +91,11 @@ public class Player : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
+		if (over) {
+			return;
+		}
 		if (slowBleedTimer.IsOffCooldown) {
-			SubtractMoney(1);
+			SubtractMoney(2);
 			slowBleedTimer.Reset();
 		} else if (textFlashRedTimer.IsOffCooldown) {
 			moneyText.text = "$" + moneyCount;
@@ -103,16 +107,32 @@ public class Player : MonoBehaviour {
 		}
 
 		if (moneyCount <= 0) {
+			over = true;
 			GameOver();
+		} else if (moneyCount >= 2000) {
+			GameWin();
 		}
 	}
 
-	void GameOver () {
+	void GameWin () {
+		GetComponent<AudioSource>().Stop();
+		GameStart g = GameObject.Find("LevelManager").GetComponent<GameStart>();
+		g.enabled = true;
+		g.Win();
+	}
 
+	void GameOver () {
+		GetComponent<AudioSource>().Stop();
+		GameStart g = GameObject.Find("LevelManager").GetComponent<GameStart>();
+		g.enabled = true;
+		g.Lose();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if (over) {
+			return;
+		}
 
 		// make harpoon face pointing direction
 		Vector3 m = Input.mousePosition;

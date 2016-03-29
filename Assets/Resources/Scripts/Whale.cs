@@ -16,7 +16,7 @@ public class Whale : Physics2DBody {
 	}
 
 	IEnumerator AddMoney (Harpoon h) {
-		int amount = (int)UnityEngine.Random.Range(90f, 150f);
+		int amount = (int)UnityEngine.Random.Range(40f, 80f);
 		player.AddMoney(amount);
 		h.Emit(amount);
 		for (int i = 0; i < amount; i++) {
