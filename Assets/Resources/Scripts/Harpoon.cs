@@ -15,7 +15,7 @@ public class Harpoon : Physics2DBody {
 		firing = false;
 		audios = GetComponents<AudioSource>();
 		bloodPS = transform.Find("BloodPS").GetComponent<ParticleSystem>();
-		collider2d.enabled = false;
+		rigidbody2d.isKinematic = true;
 	}
 
 	void DestroySelf () {
@@ -55,7 +55,7 @@ public class Harpoon : Physics2DBody {
 		rigidbody2d.velocity = direction.normalized * speed;
 		rigidbody2d.gravityScale = 1f;
 		firing = true;
-		collider2d.enabled = true;
+		rigidbody2d.isKinematic = false;
 		audios[0].Play();
 	}
 	

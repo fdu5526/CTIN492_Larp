@@ -29,7 +29,7 @@ public class Player : MonoBehaviour {
 		tickText = GameObject.Find("Canvas/tickText").GetComponent<Text>();
 		spendText.enabled = false;
 		harpoonReloadTimer = new Timer(1f);
-		slowBleedTimer = new Timer(1f);
+		slowBleedTimer = new Timer(1.15f);
 		slowBleedTimer.Reset();
 		textFlashRedTimer = new Timer(0.5f);
 		MakeNewHarpoon();
@@ -43,7 +43,6 @@ public class Player : MonoBehaviour {
 		gainText.enabled = true;
 		for (int i = 0; i < amount; i++) {
 			moneyText.color = Color.green;
-			slowBleedTimer.Reset();
 			moneyCount += 1;
 			moneyText.text = "$" + moneyCount;
 			yield return 1;
@@ -57,7 +56,7 @@ public class Player : MonoBehaviour {
 
 	void SubtractMoney (int amount) {
 		moneyCount -= amount;
-		if (amount > 1) {
+		if (amount > 2) {
 			spendText.text = "- $" + amount;
 			spendText.enabled = true;
 		} else {
@@ -109,7 +108,7 @@ public class Player : MonoBehaviour {
 		if (moneyCount <= 0) {
 			over = true;
 			GameOver();
-		} else if (moneyCount >= 2000) {
+		} else if (moneyCount >= 1000) {
 			GameWin();
 		}
 	}
@@ -117,6 +116,9 @@ public class Player : MonoBehaviour {
 	void GameWin () {
 		GetComponent<AudioSource>().Stop();
 		GameStart g = GameObject.Find("LevelManager").GetComponent<GameStart>();
+		if (currentHarpoon != null) {
+			currentHarpoon.GetComponent<Collider2D>().enabled = false;
+		}
 		g.enabled = true;
 		g.Win();
 	}
@@ -124,6 +126,9 @@ public class Player : MonoBehaviour {
 	void GameOver () {
 		GetComponent<AudioSource>().Stop();
 		GameStart g = GameObject.Find("LevelManager").GetComponent<GameStart>();
+		if (currentHarpoon != null) {
+			currentHarpoon.GetComponent<Collider2D>().enabled = false;
+		}
 		g.enabled = true;
 		g.Lose();
 	}

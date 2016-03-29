@@ -50,7 +50,7 @@ public class GameStart : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetMouseButtonUp(0)) {
+		if (Input.GetKeyUp("space")) {
 			if (lost) {
 				SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 			} else {
