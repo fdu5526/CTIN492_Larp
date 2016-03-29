@@ -13,6 +13,7 @@ public class Player : Physics2DBody {
 
 	Timer harpoonReloadTimer;
 	Timer slowBleedTimer;
+	Timer textFlashRedTimer;
 
 	// Use this for initialization
 	void Awake () {
@@ -22,6 +23,8 @@ public class Player : Physics2DBody {
 		moneyText = GameObject.Find("Canvas/Text").GetComponent<Text>();
 		harpoonReloadTimer = new Timer(1f);
 		slowBleedTimer = new Timer(1f);
+		slowBleedTimer.Reset();
+		textFlashRedTimer = new Timer(0.2f);
 		MakeNewHarpoon();
 	}
 
@@ -29,6 +32,14 @@ public class Player : Physics2DBody {
 
 	public void AddMoney (int amount) {
 		moneyCount += amount;
+		moneyText.color = Color.green;
+		textFlashRedTimer.Reset();
+	}
+
+	void SubtractMoney (int amount) {
+		moneyCount -= amount;
+		moneyText.color = Color.red;
+		textFlashRedTimer.Reset();
 	}
 
 
@@ -55,12 +66,20 @@ public class Player : Physics2DBody {
 		moneyText.text = "$" + moneyCount;
 
 		if (slowBleedTimer.IsOffCooldown) {
-			moneyCount--;
+			SubtractMoney(1);
 			slowBleedTimer.Reset();
+		} else if (textFlashRedTimer.IsOffCooldown) {
+			moneyText.color = Color.white;
+		}
+
+		if (moneyCount <= 0) {
+			GameOver();
 		}
 	}
 
+	void GameOver () {
 
+	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -76,6 +95,7 @@ public class Player : Physics2DBody {
 
 		// if mouse button up and we have a harpoon, shoot it
 		if (Input.GetMouseButtonUp(0) && HasHarpoon) {
+			SubtractMoney(5);
 			ShootHarpoon(mouseD);
 			harpoonReloadTimer.Reset();
 		}
