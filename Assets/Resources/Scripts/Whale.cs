@@ -5,12 +5,22 @@ public class Whale : Physics2DBody {
 
 	float speed;
 	AudioSource[] audios;
+	Player player;
 
 	// Use this for initialization
 	void Awake () {
 		base.Awake();
 		speed = 2f;
 		audios = GetComponents<AudioSource>();
+		player = GameObject.Find("Player").GetComponent<Player>();
+	}
+
+	IEnumerator AddMoney () {
+		int amount = (int)UnityEngine.Random.Range(90f, 150f);
+		for (int i = 0; i < amount; i++) {
+			player.AddMoney(1);
+			yield return 1;
+		}
 	}
 
 	void OnCollisionEnter2D (Collision2D coll) {
@@ -18,6 +28,7 @@ public class Whale : Physics2DBody {
 		if (l == Global.LayerPlayer) {
 			int r = (int)UnityEngine.Random.Range(0f, 3f);
 			audios[r].Play();
+			StartCoroutine(AddMoney());
 		}
 	}
 	

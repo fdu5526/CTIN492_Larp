@@ -25,7 +25,8 @@ public class Harpoon : Physics2DBody {
 
 	void DestroySelf () {
 		collider2d.enabled = false;
-		Destroy(this.gameObject, 3f);
+		bloodPS.transform.parent = null;
+		Destroy(this.gameObject, 10f);
 	}
 
 	// stop moving, and become unhittable
