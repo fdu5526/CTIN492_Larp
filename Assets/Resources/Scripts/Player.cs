@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Player : Physics2DBody {
@@ -7,18 +8,27 @@ public class Player : Physics2DBody {
 	GameObject currentHarpoon;
 	Vector2 harpoonLocalPos = new Vector2(1.349f, 0.14f);
 
+	int moneyCount;
+	Text moneyText;
+
 	Timer harpoonReloadTimer;
 
 	// Use this for initialization
 	void Awake () {
 		base.Awake();
+		moneyCount = 100;
 		harpoonCenter = transform.Find("HarpoonCenter").gameObject;
-		harpoonReloadTimer = new Timer(2f);
+		moneyText = GameObject.Find("Canvas/Text").GetComponent<Text>();
+		harpoonReloadTimer = new Timer(1f);
 
 		MakeNewHarpoon();
 	}
 
 	bool HasHarpoon { get { return currentHarpoon != null; } }
+
+	public void AddMoney (int amount) {
+		moneyCount += amount;
+	}
 
 
 	void MakeNewHarpoon () {
@@ -41,7 +51,7 @@ public class Player : Physics2DBody {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		
+		moneyText.text = "$" + moneyCount;
 	}
 
 

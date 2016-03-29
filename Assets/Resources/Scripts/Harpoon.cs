@@ -9,7 +9,7 @@ public class Harpoon : Physics2DBody {
 	AudioSource[] audios;
 
 	float speed = 20f;
-	bool fired;
+	bool firing;
 
 	// Use this for initialization
 	protected override void Awake () {
@@ -17,20 +17,21 @@ public class Harpoon : Physics2DBody {
 		player = GameObject.Find("Player");
 		maxLifespan = 60;
 		lifespan = maxLifespan;
-		fired = false;
+		firing = false;
 		audios = GetComponents<AudioSource>();
 	}
 
 	// stop moving, and become unhittable
 	void HitSomething () {
+		firing = false;
+		collider2d.enabled = false;
 		rigidbody2d.velocity = Vector2.zero;
 		rigidbody2d.angularVelocity = 0f;
 	}
 
 	void OnCollisionEnter2D (Collision2D coll) {
 		if (coll.gameObject != null) {
-			int l = coll.gameObject.layer;
-			//audios[1].Play();
+			HitSomething();
 		}
 	}
 
@@ -38,12 +39,13 @@ public class Harpoon : Physics2DBody {
 		transform.parent = null;
 		rigidbody2d.velocity = direction.normalized * speed;
 		rigidbody2d.gravityScale = 1f;
-		fired = true;
+		firing = true;
+		audios[0].Play();
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		if (fired) {
+		if (firing) {
 			float angle = Global.Angle(Vector2.right, rigidbody2d.velocity);
 			rigidbody2d.rotation = -angle;
 		}

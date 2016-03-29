@@ -9,6 +9,8 @@ using UnityEngine;
  */
 public class Global
 {
+	public static int LayerPlayer = 8;
+
 	public static bool FiftyFifty { get { return UnityEngine.Random.value > 0.5f; } }
 	
 	// find facing angle based on default sprite direction
