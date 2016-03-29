@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class Player : Physics2DBody {
+public class Player : MonoBehaviour {
 
 	GameObject harpoonCenter;
 	GameObject currentHarpoon;
@@ -10,6 +10,9 @@ public class Player : Physics2DBody {
 
 	int moneyCount;
 	Text moneyText;
+	Text spendText;
+	Text tickText;
+	Text gainText;
 
 	Timer harpoonReloadTimer;
 	Timer slowBleedTimer;
@@ -17,28 +20,52 @@ public class Player : Physics2DBody {
 
 	// Use this for initialization
 	void Awake () {
-		base.Awake();
 		moneyCount = 100;
 		harpoonCenter = transform.Find("HarpoonCenter").gameObject;
 		moneyText = GameObject.Find("Canvas/Text").GetComponent<Text>();
+		spendText = GameObject.Find("Canvas/SpendText").GetComponent<Text>();
+		gainText = GameObject.Find("Canvas/GainText").GetComponent<Text>();
+		tickText = GameObject.Find("Canvas/tickText").GetComponent<Text>();
+		spendText.enabled = false;
 		harpoonReloadTimer = new Timer(1f);
 		slowBleedTimer = new Timer(1f);
 		slowBleedTimer.Reset();
-		textFlashRedTimer = new Timer(0.2f);
+		textFlashRedTimer = new Timer(0.5f);
 		MakeNewHarpoon();
 	}
 
 	bool HasHarpoon { get { return currentHarpoon != null; } }
 
+
+	IEnumerator AddMoneyAsync (int amount) {
+		gainText.text = "+ $" + amount;
+		gainText.enabled = true;
+		for (int i = 0; i < amount; i++) {
+			moneyText.color = Color.green;
+			slowBleedTimer.Reset();
+			moneyCount += 1;
+			moneyText.text = "$" + moneyCount;
+			yield return 1;
+		}
+	}
+
 	public void AddMoney (int amount) {
-		moneyCount += amount;
-		moneyText.color = Color.green;
 		textFlashRedTimer.Reset();
+		StartCoroutine(AddMoneyAsync(amount));
 	}
 
 	void SubtractMoney (int amount) {
 		moneyCount -= amount;
-		moneyText.color = Color.red;
+		if (amount > 1) {
+			spendText.text = "- $" + amount;
+			spendText.enabled = true;
+		} else {
+			tickText.text = "- $" + amount;
+			tickText.enabled = true;
+		}
+
+		moneyText.text = "$" + moneyCount;
+		moneyText.color = Color.red;;
 		textFlashRedTimer.Reset();
 	}
 
@@ -63,13 +90,16 @@ public class Player : Physics2DBody {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		moneyText.text = "$" + moneyCount;
-
 		if (slowBleedTimer.IsOffCooldown) {
 			SubtractMoney(1);
 			slowBleedTimer.Reset();
 		} else if (textFlashRedTimer.IsOffCooldown) {
+			moneyText.text = "$" + moneyCount;
 			moneyText.color = Color.white;
+			spendText.enabled = false;
+			gainText.enabled = false;
+			tickText.enabled = false;
+			moneyText.fontSize = 40;
 		}
 
 		if (moneyCount <= 0) {
@@ -95,7 +125,7 @@ public class Player : Physics2DBody {
 
 		// if mouse button up and we have a harpoon, shoot it
 		if (Input.GetMouseButtonUp(0) && HasHarpoon) {
-			SubtractMoney(5);
+			SubtractMoney(10);
 			ShootHarpoon(mouseD);
 			harpoonReloadTimer.Reset();
 		}

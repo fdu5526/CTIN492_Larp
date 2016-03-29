@@ -8,7 +8,7 @@ public class Whale : Physics2DBody {
 	Player player;
 
 	// Use this for initialization
-	void Awake () {
+	protected override void Awake () {
 		base.Awake();
 		speed = 2f;
 		audios = GetComponents<AudioSource>();
@@ -17,12 +17,12 @@ public class Whale : Physics2DBody {
 
 	IEnumerator AddMoney (Harpoon h) {
 		int amount = (int)UnityEngine.Random.Range(90f, 150f);
+		player.AddMoney(amount);
 		h.Emit(amount);
 		for (int i = 0; i < amount; i++) {
 			if (!audios[3].isPlaying) {
 				audios[3].Play();
 			}
-			player.AddMoney(1);
 			yield return 1;
 		}
 

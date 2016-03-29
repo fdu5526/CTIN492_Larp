@@ -3,9 +3,6 @@ using System.Collections;
 
 public class Harpoon : Physics2DBody {
 
-	int maxLifespan;
-	int lifespan;
-	GameObject player;
 	AudioSource[] audios;
 
 	float speed = 20f;
@@ -15,9 +12,6 @@ public class Harpoon : Physics2DBody {
 	// Use this for initialization
 	protected override void Awake () {
 		base.Awake();
-		player = GameObject.Find("Player");
-		maxLifespan = 60;
-		lifespan = maxLifespan;
 		firing = false;
 		audios = GetComponents<AudioSource>();
 		bloodPS = transform.Find("BloodPS").GetComponent<ParticleSystem>();
@@ -25,6 +19,7 @@ public class Harpoon : Physics2DBody {
 
 	void DestroySelf () {
 		collider2d.enabled = false;
+		GetComponent<SpriteRenderer>().color = new Color(0.2f, 0.2f, 0.2f, 0.2f);	
 		bloodPS.transform.parent = null;
 		Destroy(this.gameObject, 10f);
 	}
@@ -34,7 +29,7 @@ public class Harpoon : Physics2DBody {
 		firing = false;
 		rigidbody2d.velocity = Vector2.zero;
 		rigidbody2d.angularVelocity = 0f;
-		Invoke("DestroySelf", 0.4f);
+		Invoke("DestroySelf", 0.1f);
 	}
 
 	IEnumerator EmitAsync (int amount) {

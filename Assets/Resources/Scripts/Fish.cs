@@ -8,21 +8,25 @@ public class Fish : Physics2DBody {
 	Player player;
 
 	// Use this for initialization
-	void Awake () {
+	protected override void Awake () {
 		base.Awake();
+
+		float s = UnityEngine.Random.Range(0.4f, 1.3f);
+		transform.localScale = new Vector2(s,s);
+
 		speed = UnityEngine.Random.Range(1.5f, 4f);
 		audios = GetComponents<AudioSource>();
 		player = GameObject.Find("Player").GetComponent<Player>();
 	}
 
 	IEnumerator AddMoney (Harpoon h) {
-		int amount = (int)UnityEngine.Random.Range(1f, 10f);
+		int amount = (int)UnityEngine.Random.Range(1f, 7f);
+		player.AddMoney(amount);
 		h.Emit(amount);
 		for (int i = 0; i < amount; i++) {
 			if (!audios[3].isPlaying) {
 				audios[3].Play();
 			}
-			player.AddMoney(1);
 			yield return 1;
 		}
 
