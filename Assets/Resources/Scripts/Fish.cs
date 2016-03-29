@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Whale : Physics2DBody {
+public class Fish : Physics2DBody {
 
 	float speed;
 	AudioSource[] audios;
@@ -10,13 +10,13 @@ public class Whale : Physics2DBody {
 	// Use this for initialization
 	void Awake () {
 		base.Awake();
-		speed = 2f;
+		speed = UnityEngine.Random.Range(1.5f, 4f);
 		audios = GetComponents<AudioSource>();
 		player = GameObject.Find("Player").GetComponent<Player>();
 	}
 
 	IEnumerator AddMoney (Harpoon h) {
-		int amount = (int)UnityEngine.Random.Range(90f, 150f);
+		int amount = (int)UnityEngine.Random.Range(1f, 10f);
 		h.Emit(amount);
 		for (int i = 0; i < amount; i++) {
 			if (!audios[3].isPlaying) {

@@ -32,10 +32,20 @@ public class Harpoon : Physics2DBody {
 	// stop moving, and become unhittable
 	void HitSomething () {
 		firing = false;
-		bloodPS.GetComponent<ParticleSystem>().Play();
 		rigidbody2d.velocity = Vector2.zero;
 		rigidbody2d.angularVelocity = 0f;
 		Invoke("DestroySelf", 0.4f);
+	}
+
+	IEnumerator EmitAsync (int amount) {
+		for (int i = 0; i < amount; i++) {
+			bloodPS.GetComponent<ParticleSystem>().Emit(1);
+			yield return new WaitForSeconds(0.01f);
+		}
+	}
+
+	public void Emit (int amount) {
+		StartCoroutine(EmitAsync(amount));
 	}
 
 	void OnCollisionEnter2D (Collision2D coll) {

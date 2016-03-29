@@ -12,6 +12,7 @@ public class Player : Physics2DBody {
 	Text moneyText;
 
 	Timer harpoonReloadTimer;
+	Timer slowBleedTimer;
 
 	// Use this for initialization
 	void Awake () {
@@ -20,7 +21,7 @@ public class Player : Physics2DBody {
 		harpoonCenter = transform.Find("HarpoonCenter").gameObject;
 		moneyText = GameObject.Find("Canvas/Text").GetComponent<Text>();
 		harpoonReloadTimer = new Timer(1f);
-
+		slowBleedTimer = new Timer(1f);
 		MakeNewHarpoon();
 	}
 
@@ -52,6 +53,11 @@ public class Player : Physics2DBody {
 	// Update is called once per frame
 	void FixedUpdate () {
 		moneyText.text = "$" + moneyCount;
+
+		if (slowBleedTimer.IsOffCooldown) {
+			moneyCount--;
+			slowBleedTimer.Reset();
+		}
 	}
 
 
