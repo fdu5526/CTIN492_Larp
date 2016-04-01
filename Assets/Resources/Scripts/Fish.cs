@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Fish : Physics2DBody {
 
+	float size;
 	float speed;
 	AudioSource[] audios;
 	Player player;
@@ -11,8 +12,8 @@ public class Fish : Physics2DBody {
 	protected override void Awake () {
 		base.Awake();
 
-		float s = UnityEngine.Random.Range(0.4f, 1.3f);
-		transform.localScale = new Vector2(s,s);
+		size = UnityEngine.Random.Range(0.4f, 1.3f);
+		transform.localScale = new Vector2(size, size);
 
 		speed = UnityEngine.Random.Range(1.5f, 4f);
 		audios = GetComponents<AudioSource>();
@@ -20,7 +21,7 @@ public class Fish : Physics2DBody {
 	}
 
 	IEnumerator AddMoney (Harpoon h) {
-		int amount = (int)UnityEngine.Random.Range(1f, 7f);
+		int amount = (int)(size * 5f) + (int)UnityEngine.Random.Range(1f, 2f);
 		player.AddMoney(amount);
 		h.Emit(amount);
 		for (int i = 0; i < amount; i++) {
