@@ -40,6 +40,7 @@ public class Player : MonoBehaviour {
 
 	IEnumerator AddMoneyAsync (int amount) {
 		gainText.text = "+ $" + amount;
+		gainText.fontSize = amount / 2 + 15;
 		gainText.enabled = true;
 		for (int i = 0; i < amount; i++) {
 			moneyText.color = Color.green;
